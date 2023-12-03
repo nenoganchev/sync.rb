@@ -67,7 +67,8 @@ def verify(dir_path)
   fingerprints = {}
   fingerprints_file.each_line do |line|
     line.strip!
-    hash, relative_path = line[0..(sha1_len - 1)], line[(sha1_len + 1)..]
+    hash = line[0..(sha1_len - 1)]
+    relative_path = line[(sha1_len + 1)..]
     fingerprints[relative_path] = hash
   end
 
@@ -80,9 +81,9 @@ def verify(dir_path)
   puts "\n\n"
 
   if changed_hashes.empty?
-    puts "All files are OK"
+    puts 'All files are OK'
   else
-    puts "CORRUPTED FILES FOUND:"
+    puts 'CORRUPTED FILES FOUND:'
     changed_hashes.each do |corrupted_file, new_hash|
       puts "#{corrupted_file}  (New hash: #{new_hash})"
     end
@@ -94,7 +95,7 @@ def file_sha1(file_path)
   file = File.open file_path, 'rb'
 
   @sha1_digestor.reset
-  while file_chunk = file.read(4 * 1024 * 1024)
+  while (file_chunk = file.read(4 * 1024 * 1024))
     @sha1_digestor << file_chunk
   end
   @sha1_digestor.hexdigest
@@ -119,6 +120,5 @@ def fingerprints_file_in(dir_path, create: false)
     File.open file_path, 'r'
   end
 end
-
 
 main
